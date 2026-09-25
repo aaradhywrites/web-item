@@ -1,0 +1,496 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Messi - Barcelona Kick</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #07111f;
+    font-family: monospace;
+}
+
+.scene {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-height: 500px;
+    overflow: hidden;
+    background:
+        linear-gradient(#07111f 0 62%, #123b25 62% 100%);
+}
+
+/* Stadium lights */
+.stars {
+    position: absolute;
+    inset: 0 0 38%;
+    background:
+        radial-gradient(circle at 15% 25%, white 0 2px, transparent 3px),
+        radial-gradient(circle at 35% 18%, white 0 2px, transparent 3px),
+        radial-gradient(circle at 70% 28%, white 0 2px, transparent 3px),
+        radial-gradient(circle at 88% 15%, white 0 2px, transparent 3px);
+    opacity: .55;
+}
+
+/* Grass */
+.pitch {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 38%;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #174b2c 0 90px,
+            #1b5632 90px 180px
+        );
+}
+
+.pitch::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 18%;
+    height: 4px;
+    background: rgba(255,255,255,.35);
+}
+
+/* Goal */
+.goal {
+    position: absolute;
+    right: 8%;
+    bottom: 29%;
+    width: 250px;
+    height: 180px;
+    border: 8px solid white;
+    border-bottom: 0;
+    filter: drop-shadow(0 0 4px white);
+}
+
+.net {
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 18px,
+            rgba(255,255,255,.28) 19px 21px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0 18px,
+            rgba(255,255,255,.28) 19px 21px
+        );
+    transform: perspective(300px) rotateY(-8deg);
+}
+
+/* Messi */
+.messi {
+    position: absolute;
+    left: 16%;
+    bottom: 29%;
+    width: 90px;
+    height: 170px;
+    image-rendering: pixelated;
+    animation: walk 4s steps(8, end) forwards;
+    z-index: 5;
+}
+
+/* Head */
+.head {
+    position: absolute;
+    left: 29px;
+    top: 0;
+    width: 35px;
+    height: 40px;
+    background: #c88762;
+    box-shadow:
+        -5px 0 #5b3527,
+        5px 0 #5b3527;
+}
+
+/* Hair */
+.hair {
+    position: absolute;
+    left: 25px;
+    top: -6px;
+    width: 43px;
+    height: 15px;
+    background: #3b241d;
+    box-shadow:
+        5px 7px #3b241d,
+        10px 4px #3b241d,
+        15px 2px #3b241d;
+}
+
+/* Face */
+.face {
+    position: absolute;
+    left: 38px;
+    top: 21px;
+    width: 5px;
+    height: 5px;
+    background: #21150f;
+}
+
+/* Body / Barcelona shirt */
+.body {
+    position: absolute;
+    left: 20px;
+    top: 43px;
+    width: 55px;
+    height: 65px;
+    background:
+        linear-gradient(
+            90deg,
+            #a50044 0 18%,
+            #17408b 18% 38%,
+            #a50044 38% 58%,
+            #17408b 58% 78%,
+            #a50044 78%
+        );
+    border: 5px solid #111;
+}
+
+/* Shirt collar */
+.body::before {
+    content: "";
+    position: absolute;
+    left: 17px;
+    top: -5px;
+    width: 17px;
+    height: 8px;
+    background: #f5c542;
+}
+
+/* Shirt number */
+.body::after {
+    content: "10";
+    position: absolute;
+    left: 14px;
+    top: 24px;
+    color: #f5c542;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Arms */
+.arm {
+    position: absolute;
+    top: 50px;
+    width: 18px;
+    height: 55px;
+    background: #c88762;
+    border: 4px solid #111;
+    transform-origin: top center;
+}
+
+.arm.left {
+    left: 7px;
+    transform: rotate(22deg);
+}
+
+.arm.right {
+    right: 7px;
+    transform: rotate(-22deg);
+}
+
+/* Shorts */
+.shorts {
+    position: absolute;
+    left: 22px;
+    top: 104px;
+    width: 51px;
+    height: 30px;
+    background: #17408b;
+    border: 4px solid #111;
+}
+
+/* Legs */
+.leg {
+    position: absolute;
+    top: 128px;
+    width: 19px;
+    height: 42px;
+    background: #c88762;
+    border: 4px solid #111;
+    transform-origin: top center;
+}
+
+.leg.left {
+    left: 25px;
+    animation: leftLeg 4s steps(8, end) forwards;
+}
+
+.leg.right {
+    left: 52px;
+    animation: rightLeg 4s steps(8, end) forwards;
+}
+
+/* Boots */
+.boot {
+    position: absolute;
+    width: 30px;
+    height: 13px;
+    background: #eee;
+    border: 4px solid #111;
+}
+
+.boot.left {
+    left: 15px;
+    top: 164px;
+}
+
+.boot.right {
+    left: 48px;
+    top: 164px;
+}
+
+/* Ball */
+.ball {
+    position: absolute;
+    left: 39%;
+    bottom: 31%;
+    width: 28px;
+    height: 28px;
+    background: white;
+    border: 4px solid #111;
+    border-radius: 50%;
+    z-index: 4;
+    animation: ballKick 4s linear forwards;
+}
+
+.ball::after {
+    content: "⬟";
+    position: absolute;
+    left: 4px;
+    top: 2px;
+    color: #222;
+    font-size: 11px;
+}
+
+/* Kick leg */
+.messi .kick-leg {
+    position: absolute;
+    left: 50px;
+    top: 126px;
+    width: 20px;
+    height: 52px;
+    background: #c88762;
+    border: 4px solid #111;
+    transform-origin: top center;
+    opacity: 0;
+    animation: kickLeg 4s steps(1, end) forwards;
+}
+
+.messi .kick-boot {
+    position: absolute;
+    left: 60px;
+    top: 166px;
+    width: 38px;
+    height: 14px;
+    background: white;
+    border: 4px solid #111;
+    opacity: 0;
+    animation: kickBoot 4s steps(1, end) forwards;
+}
+
+/* Walk forward */
+@keyframes walk {
+    0% {
+        left: 16%;
+    }
+
+    55% {
+        left: 32%;
+    }
+
+    68% {
+        left: 35%;
+    }
+
+    100% {
+        left: 35%;
+    }
+}
+
+/* Walking legs */
+@keyframes leftLeg {
+    0%, 20% {
+        transform: rotate(20deg);
+    }
+
+    30%, 50% {
+        transform: rotate(-20deg);
+    }
+
+    60%, 100% {
+        transform: rotate(5deg);
+    }
+}
+
+@keyframes rightLeg {
+    0%, 20% {
+        transform: rotate(-20deg);
+    }
+
+    30%, 50% {
+        transform: rotate(20deg);
+    }
+
+    60%, 100% {
+        transform: rotate(-5deg);
+    }
+}
+
+/* Kick */
+@keyframes kickLeg {
+    0%, 68% {
+        opacity: 0;
+        transform: rotate(0deg);
+    }
+
+    70% {
+        opacity: 1;
+        transform: rotate(35deg);
+    }
+
+    76% {
+        opacity: 1;
+        transform: rotate(-55deg);
+    }
+
+    82%, 100% {
+        opacity: 0;
+        transform: rotate(-20deg);
+    }
+}
+
+@keyframes kickBoot {
+    0%, 68% {
+        opacity: 0;
+        transform: rotate(0deg);
+    }
+
+    70% {
+        opacity: 1;
+        transform: rotate(25deg);
+    }
+
+    76% {
+        opacity: 1;
+        transform: rotate(-25deg);
+    }
+
+    82%, 100% {
+        opacity: 0;
+    }
+}
+
+/* Ball flies into goal */
+@keyframes ballKick {
+    0%, 67% {
+        left: 39%;
+        bottom: 31%;
+        transform: rotate(0deg) scale(1);
+    }
+
+    72% {
+        left: 47%;
+        bottom: 42%;
+        transform: rotate(180deg) scale(1.05);
+    }
+
+    82% {
+        left: 65%;
+        bottom: 48%;
+        transform: rotate(500deg) scale(.9);
+    }
+
+    92% {
+        left: 82%;
+        bottom: 47%;
+        transform: rotate(850deg) scale(.8);
+    }
+
+    100% {
+        left: 88%;
+        bottom: 38%;
+        transform: rotate(1100deg) scale(.7);
+    }
+}
+
+/* Title */
+.title {
+    position: absolute;
+    top: 30px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: clamp(18px, 3vw, 32px);
+    letter-spacing: 4px;
+    text-shadow: 4px 4px #000;
+}
+</style>
+</head>
+
+<body>
+
+<div class="scene">
+
+    <div class="stars"></div>
+
+    <div class="title">
+        MESSI • PIXEL FOOTBALL
+    </div>
+
+    <div class="pitch"></div>
+
+    <!-- Goal -->
+    <div class="goal">
+        <div class="net"></div>
+    </div>
+
+    <!-- Pre-created football -->
+    <div class="ball"></div>
+
+    <!-- Pixel Messi -->
+    <div class="messi">
+
+        <div class="hair"></div>
+        <div class="head"></div>
+        <div class="face"></div>
+
+        <div class="body"></div>
+
+        <div class="arm left"></div>
+        <div class="arm right"></div>
+
+        <div class="shorts"></div>
+
+        <div class="leg left"></div>
+        <div class="leg right"></div>
+
+        <!-- Kicking leg -->
+        <div class="kick-leg"></div>
+        <div class="kick-boot"></div>
+
+        <div class="boot left"></div>
+        <div class="boot right"></div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+```
